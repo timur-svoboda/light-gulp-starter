@@ -1,5 +1,5 @@
 import gulp from "gulp";
-const { src, dest, parallel } = gulp;
+const { src, dest, series, parallel } = gulp;
 
 import BrowserSync from "browser-sync";
 const bs = BrowserSync.create();
@@ -11,6 +11,8 @@ import postcss from "gulp-postcss";
 import cssnano from "cssnano";
 
 import uglify from "gulp-uglify";
+
+import del from "del";
 
 const config = {
   paths: {
@@ -34,7 +36,8 @@ const config = {
     fonts: {
       src: "./src/fonts/**/*",
       dest: "./dist/fonts"
-    }
+    },
+    build: "./dist"
   }
 };
 
@@ -52,6 +55,11 @@ export function dev(cb) {
 }
 
 export default dev;
+
+async function deleteBuild(cb) {
+  await del(config.paths.build);
+  cb();
+}
 
 function buildPages() {
   return src(config.paths.pages.src)
@@ -84,4 +92,13 @@ function buildFonts() {
     .pipe(dest(config.paths.fonts.dest));
 }
 
-export const build = parallel(buildPages, buildCss, buildJs, buildImages, buildFonts);
+export const build = series(
+  deleteBuild, 
+  parallel(
+    buildPages, 
+    buildCss, 
+    buildJs, 
+    buildImages, 
+    buildFonts
+  )
+);
