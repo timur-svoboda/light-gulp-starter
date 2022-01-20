@@ -51,7 +51,7 @@ function buildPages() {
 }
 
 function buildCss() {
-  return (src(config.paths.css.src))
+  return src(config.paths.css.src)
     .pipe(sourcemaps.init())
     .pipe(postcss([cssnano()]))
     .pipe(sourcemaps.write("./"))
