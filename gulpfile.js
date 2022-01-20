@@ -30,6 +30,10 @@ const config = {
     images: {
       src: "./src/images/**/*",
       dest: "./dist/images"
+    },
+    fonts: {
+      src: "./src/fonts/**/*",
+      dest: "./dist/fonts"
     }
   }
 };
@@ -75,4 +79,9 @@ function buildImages() {
     .pipe(dest(config.paths.images.dest));
 }
 
-export const build = parallel(buildPages, buildCss, buildJs, buildImages);
+function buildFonts() {
+  return src(config.paths.fonts.src)
+    .pipe(dest(config.paths.fonts.dest));
+}
+
+export const build = parallel(buildPages, buildCss, buildJs, buildImages, buildFonts);
