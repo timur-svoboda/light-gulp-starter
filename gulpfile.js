@@ -26,6 +26,10 @@ const config = {
     js: {
       src: "./src/js/**/*.js",
       dest: "./dist/js"
+    },
+    images: {
+      src: "./src/images/**/*",
+      dest: "./dist/images"
     }
   }
 };
@@ -66,4 +70,9 @@ function buildJs() {
     .pipe(dest(config.paths.js.dest));
 }
 
-export const build = parallel(buildPages, buildCss, buildJs);
+function buildImages() {
+  return src(config.paths.images.src)
+    .pipe(dest(config.paths.images.dest));
+}
+
+export const build = parallel(buildPages, buildCss, buildJs, buildImages);
