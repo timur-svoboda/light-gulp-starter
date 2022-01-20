@@ -39,6 +39,10 @@ const config = {
       src: "./src/fonts/**/*",
       dest: "./dist/fonts"
     },
+    libs: {
+      src: "./src/libs/**/*",
+      dest: "./dist/libs"
+    },
     build: "./dist",
     deployFiles: "./dist/**/*"
   }
@@ -95,6 +99,11 @@ function buildFonts() {
     .pipe(dest(config.paths.fonts.dest));
 }
 
+function buildLibs() {
+  return src(config.paths.libs.src)
+    .pipe(dest(config.paths.libs.dest));
+}
+
 export const build = series(
   deleteBuild, 
   parallel(
@@ -102,7 +111,8 @@ export const build = series(
     buildCss, 
     buildJs, 
     buildImages, 
-    buildFonts
+    buildFonts,
+    buildLibs
   )
 );
 
