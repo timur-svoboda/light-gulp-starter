@@ -1,11 +1,18 @@
 import gulp from "gulp";
+const { src, dest, parallel } = gulp;
+
 import BrowserSync from "browser-sync";
 const bs = BrowserSync.create();
+
 import colors from "colors/safe.js";
 
 const config = {
   paths: {
-    server: "./src"
+    server: "./src",
+    pages: {
+      src: "./src/*.html",
+      dest: "./dist"
+    }
   }
 };
 
@@ -23,3 +30,10 @@ export function dev(cb) {
 }
 
 export default dev;
+
+function buildPages() {
+  return src(config.paths.pages.src)
+    .pipe(dest(config.paths.pages.dest));
+}
+
+export const build = parallel(buildPages);
