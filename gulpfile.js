@@ -14,6 +14,8 @@ import uglify from "gulp-uglify";
 
 import del from "del";
 
+import ghPages from "gulp-gh-pages";
+
 const config = {
   paths: {
     server: "./src",
@@ -37,7 +39,8 @@ const config = {
       src: "./src/fonts/**/*",
       dest: "./dist/fonts"
     },
-    build: "./dist"
+    build: "./dist",
+    deployFiles: "./dist/**/*"
   }
 };
 
@@ -101,4 +104,14 @@ export const build = series(
     buildImages, 
     buildFonts
   )
+);
+
+function deployBuild() {
+  return src(config.paths.deployFiles)
+    .pipe(ghPages())
+}
+
+export const deploy = series(
+  build,
+  deployBuild
 );
