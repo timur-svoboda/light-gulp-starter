@@ -10,6 +10,8 @@ import sourcemaps from "gulp-sourcemaps";
 import postcss from "gulp-postcss";
 import cssnano from "cssnano";
 
+import uglify from "gulp-uglify";
+
 const config = {
   paths: {
     server: "./src",
@@ -20,6 +22,10 @@ const config = {
     css: {
       src: "./src/css/**/*.css",
       dest: "./dist/css"
+    },
+    js: {
+      src: "./src/js/**/*.js",
+      dest: "./dist/js"
     }
   }
 };
@@ -52,4 +58,12 @@ function buildCss() {
     .pipe(dest(config.paths.css.dest));
 }
 
-export const build = parallel(buildPages, buildCss);
+function buildJs() {
+  return src(config.paths.js.src)
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write("./"))
+    .pipe(dest(config.paths.js.dest));
+}
+
+export const build = parallel(buildPages, buildCss, buildJs);
