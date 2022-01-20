@@ -5,6 +5,10 @@ import BrowserSync from "browser-sync";
 const bs = BrowserSync.create();
 
 import colors from "colors/safe.js";
+import sourcemaps from "gulp-sourcemaps";
+
+import postcss from "gulp-postcss";
+import cssnano from "cssnano";
 
 const config = {
   paths: {
@@ -12,6 +16,10 @@ const config = {
     pages: {
       src: "./src/*.html",
       dest: "./dist"
+    },
+    css: {
+      src: "./src/css/**/*.css",
+      dest: "./dist/css"
     }
   }
 };
@@ -36,4 +44,12 @@ function buildPages() {
     .pipe(dest(config.paths.pages.dest));
 }
 
-export const build = parallel(buildPages);
+function buildCss() {
+  return (src(config.paths.css.src))
+    .pipe(sourcemaps.init())
+    .pipe(postcss([cssnano()]))
+    .pipe(sourcemaps.write("./"))
+    .pipe(dest(config.paths.css.dest));
+}
+
+export const build = parallel(buildPages, buildCss);
